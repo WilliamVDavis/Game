@@ -1,0 +1,20 @@
+{
+  "name": "thewillgame",
+  "version": "1.0.0",
+  "main": "ex1.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node": "^12.4.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}

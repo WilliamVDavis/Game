@@ -6,12 +6,14 @@ class ex1 extends Phaser.Scene {
     preload(){
        this.load.image('background', 'jungle.jpg');
        this.load.image('possum', 'possumready.gif'); 
-       this.load.image('boomerang', 'boomerang4.jpeg');
-       this.load.image('cat1', 'cat.jpg');
+       this.load.image('boomerang', 'boomerang2.jpeg');
+       this.load.image('cat1', 'cat.png');
        this.load.image('stone1', 'stoneL.png');
        this.load.image('stone2', 'stoneD.png');
        this.load.image('stone3', 'stoneR.png');
        this.load.image('stone4', 'stoneU.png');
+       this.load.image('bricks', 'bricks.png');
+       this.load.image('bricks1', 'bricksU.png');
     }
 
     create(){
@@ -42,8 +44,50 @@ class ex1 extends Phaser.Scene {
         this.image = this.add.image(565, 415,'stone3');
         this.image = this.add.image(595, 415,'stone3');
         this.image = this.add.image(610, 400,'stone4');
-        this.image = this.physics.add.image(625, 100,'cat1').setDepth(1);
-        possum = this.image = this.physics.add.image(100, 500,'possum').setDepth(1);
+        bricks = this.add.image(125, 720, 'bricks');
+        bricks = this.add.image(375, 720, 'bricks');
+        bricks = this.add.image(625, 720, 'bricks');
+        bricks = this.add.image(875, 720, 'bricks');
+        bricks1 = this.add.image(-20, 600, 'bricks1');
+        bricks1 = this.add.image(-20, 350, 'bricks1');
+        bricks1 = this.add.image(-20, 120, 'bricks1');
+        bricks = this.add.image(125, -20, 'bricks');
+        bricks = this.add.image(375, -20, 'bricks');
+        bricks = this.add.image(625, -20, 'bricks');
+        bricks = this.add.image(875, -20, 'bricks');
+        bricks1  = this.add.image(920, 600, 'bricks1');
+        bricks1 = this.add.image(920, 350, 'bricks1');
+        bricks1 = this.add.image(920, 120, 'bricks1');
+        boomerang = this.physics.add.image(possum, possum, 'boomerang');
+        cat1 = this.physics.add.image(625, 100,'cat1');
+        possum = this.physics.add.image(100, 500,'possum');
+
+        possum.setCollideWorldBounds(true);
+        cat1.setCollideWorldBounds(true);
+
+        this.physics.add.existing(bricks);
+        this.physics.add.existing(bricks1);
+        
+        bricks.body.allowGravity = false;
+        bricks.body.immovable = true;
+       
+        bricks1.body.allowGravity = false;
+        bricks1.body.immovable = true;
+
+        possum.body.allowGravity = false;
+       
+        cat1.body.allowGravity = false;
+        cat1.body.immovable = true;
+
+        var BetweenPoints = Phaser.Math.Angle.BetweenPoints;
+        var SetToAngle = Phaser.Geom.Line.SetToAngle;
+        var velocityFromRotation = this.physics.velocityFromRotation;
+        var velocity = new Phaser.Math.Vector2();
+        var line = new Phaser.Geom.Line();
+
+       
+        this.physics.add.collider(possum, bricks);
+        this.physics.add.collider(possum, bricks1);
 
         this.key_W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.key_S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -51,51 +95,19 @@ class ex1 extends Phaser.Scene {
         this.key_A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.key_B = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B);
 
+        this.input.on('pointermove', function (pointer) {
+            var angle = BetweenPoints(possum, pointer);
     
-        
-        // var Boomerang = new Phaser.Class({
+            SetToAngle(line, possum, possum, angle, 0);
+            velocityFromRotation(angle, 1200, velocity);
+        }, this);
+    
 
-        //     Extends: Phaser.GameObjects.Image,
-    
-        //     initialize:
-    
-        // //     function Boomerang (scene)
-        //     {
-        //         Phaser.GameObjects.Image.call(this, scene, 0, 0, 'boomarang');
-    
-        //         this.speed = Phaser.Math.GetSpeed(400, 1);
-        //     },
-    
-        //     fire: function (x, y)
-        //     {
-        //         this.setPosition(x, y - 50);
-    
-        //         this.setActive(true);
-        //         this.setVisible(true);
-        //     },
-    
-        //     update: function (time, delta)
-        //     {
-        //         this.y -= this.speed * delta;
-    
-        //         if (this.y < -50)
-        //         {
-        //             this.setActive(false);
-        //             this.setVisible(false);
-        //         }
-        //     }
-    
-        // });
-        // boomerangs = this.add.group({
-        //     classType: Boomerang,
-        //     maxsize: 10,
-        //     runChildUpdate: true
-        // });
-
-        this.input.on('pointerdown', function(event)  {
-            this.image.x = event.x;
-            this.image.y = event.y;
-        },this);
+        this.input.on('pointerdown', function () {
+            // Enable physics body and reset (at position), activate game object, show game object
+            boomerang.enableBody(true, possum.x, possum.y, true, true).setVelocity(velocity.x, velocity.y);
+            boomerang.play();
+        }, this);
 
        this.input.keyboard.on('keyup', function(e) {
            if(e.key == "2") {
@@ -103,71 +115,20 @@ class ex1 extends Phaser.Scene {
            }
 
        }, this);
-
-    //    this.physics.world.on('worldbounds', this.onWorldBounds, this);
-
-    //    this.physics.collide(this.image, this.physics.world, () => {
-    //     console.log('Hit world')
-    // }, null, this);
        
                
     }
 
     update (delta){
         if(this.key_A.isDown)
-        this.image.x-=7;
+        possum.x-=5;
         if(this.key_D.isDown)
-        this.image.x+=7;  
+        possum.x+=5;  
         if(this.key_S.isDown)
-        this.image.y+=7;
+        possum.y+=5;
         if(this.key_W.isDown)
-        this.image.y-=7;
-        // if(this.key_B.isDown && time > lastFired)
-        // {
-        //     var boomerang = boomerangs.get();
-        //     if (boomerang)
-        //     {
-        //         boomerang.fire(possum.x, possum.y);
-
-        //         lastFired = time + 50;
-        //     }
-        // }
+        possum.y-=5;
     }  
-
-    /*wrap:*/ function (image, padding)
-    {
-        if (image.body)
-        {
-            this.wrapImage(image, padding);
-        }
-        else if (image.getChildren)
-        {
-            this.wrapArray(image.getChildren(), padding);
-        }
-        else if (Array.isArray(image))
-        {
-            this.wrapArray(image, padding);
-        }
-        else
-        {
-            this.wrapImage(image, padding);
-        }
-    }
-
-    /*wrapArray:*/ function (images, padding)
-    {
-        for (var i = 0; i < images.length; i++)
-        {
-            this.wrapObject(images[i], padding);
-        }
-    }
-
-    /*wrapObject:*/ function (image, padding) 
-    {
-        if (padding === undefined) { padding = 0; }
-
-        image.x = Wrap(image.x, this.bounds.left - padding, this.bounds.right + padding);
-        image.y = Wrap(image.y, this.bounds.top - padding, this.bounds.bottom + padding);
-    }
-
+    
 }
+

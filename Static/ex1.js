@@ -7,7 +7,7 @@ class ex1 extends Phaser.Scene {
        this.load.image('background', 'jungle.jpg');
        this.load.image('possum', 'possumready.gif'); 
        this.load.image('boomerang', 'boomerang4.jpeg');
-       this.load.image('cat1', 'cat.png');
+       this.load.image('cat1', 'cat.jpg');
        this.load.image('stone1', 'stoneL.png');
        this.load.image('stone2', 'stoneD.png');
        this.load.image('stone3', 'stoneR.png');
@@ -42,7 +42,7 @@ class ex1 extends Phaser.Scene {
         this.image = this.add.image(565, 415,'stone3');
         this.image = this.add.image(595, 415,'stone3');
         this.image = this.add.image(610, 400,'stone4');
-        this.image = this.physics.add.image(625, 100,'cat1');
+        this.image = this.physics.add.image(625, 100,'cat1').setDepth(1);
         possum = this.image = this.physics.add.image(100, 500,'possum').setDepth(1);
 
         this.key_W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -51,6 +51,8 @@ class ex1 extends Phaser.Scene {
         this.key_A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.key_B = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B);
 
+    
+        
         // var Boomerang = new Phaser.Class({
 
         //     Extends: Phaser.GameObjects.Image,
@@ -101,19 +103,25 @@ class ex1 extends Phaser.Scene {
            }
 
        }, this);
+
+    //    this.physics.world.on('worldbounds', this.onWorldBounds, this);
+
+    //    this.physics.collide(this.image, this.physics.world, () => {
+    //     console.log('Hit world')
+    // }, null, this);
        
                
     }
 
     update (delta){
         if(this.key_A.isDown)
-        this.image.x-=5;
+        this.image.x-=7;
         if(this.key_D.isDown)
-        this.image.x+=5;  
+        this.image.x+=7;  
         if(this.key_S.isDown)
-        this.image.y+=5;
+        this.image.y+=7;
         if(this.key_W.isDown)
-        this.image.y-=5;
+        this.image.y-=7;
         // if(this.key_B.isDown && time > lastFired)
         // {
         //     var boomerang = boomerangs.get();
@@ -125,6 +133,41 @@ class ex1 extends Phaser.Scene {
         //     }
         // }
     }  
-    
-}
 
+    /*wrap:*/ function (image, padding)
+    {
+        if (image.body)
+        {
+            this.wrapImage(image, padding);
+        }
+        else if (image.getChildren)
+        {
+            this.wrapArray(image.getChildren(), padding);
+        }
+        else if (Array.isArray(image))
+        {
+            this.wrapArray(image, padding);
+        }
+        else
+        {
+            this.wrapImage(image, padding);
+        }
+    }
+
+    /*wrapArray:*/ function (images, padding)
+    {
+        for (var i = 0; i < images.length; i++)
+        {
+            this.wrapObject(images[i], padding);
+        }
+    }
+
+    /*wrapObject:*/ function (image, padding) 
+    {
+        if (padding === undefined) { padding = 0; }
+
+        image.x = Wrap(image.x, this.bounds.left - padding, this.bounds.right + padding);
+        image.y = Wrap(image.y, this.bounds.top - padding, this.bounds.bottom + padding);
+    }
+
+}

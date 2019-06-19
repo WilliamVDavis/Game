@@ -5,7 +5,7 @@ var config = {
     physics: {
         default:'arcade',
         arcade: {
-            gravity: {y : 300},
+            gravity: {y : 0},
             checkCollision: {
                 up: true,
                 down: true,
@@ -25,4 +25,6 @@ var boomerang;
 var jungle;
 var bricks;
 var bricks1;
-
+var mouseX = 0;
+var mouseY = 0;
+var hitCat1;

@@ -19,7 +19,8 @@ var config = {
 
 var game = new Phaser.Game(config);
 var possum;
-var cat1;
+var hippo;
+var ratking;
 var shootTime = 0;
 var boomerang;
 var jungle;
@@ -27,4 +28,6 @@ var bricks;
 var bricks1;
 var mouseX = 0;
 var mouseY = 0;
-var hitCat1;
+var hitHippo;
+var gameOver;
+var stoneD;

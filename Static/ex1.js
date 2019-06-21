@@ -6,24 +6,25 @@ class ex1 extends Phaser.Scene {
     preload(){
        this.load.image('background', 'jungle.jpg');
        this.load.image('possum', 'possumready.gif'); 
-       this.load.image('boomerang', 'boomerang2.jpeg');
-       this.load.image('cat1', 'cat.png');
+       this.load.image('boomerang', 'Hueso.gif');//http://yolcati.deviantart.com/
+       this.load.image('hippo', 'hippo.png');
        this.load.image('stone1', 'stoneL.png');
        this.load.image('stone2', 'stoneD.png');
        this.load.image('stone3', 'stoneR.png');
        this.load.image('stone4', 'stoneU.png');
        this.load.image('bricks', 'bricks.png');
        this.load.image('bricks1', 'bricksU.png');
+    //    this.load.image('ratking', 'ratking.bmp');
     }
 
     create(){
         this.image = this.add.image(450,350,'background');
         this.image = this.add.image(200, 100,'stone1');
-        this.image = this.add.image(175, 115,'stone2');
-        this.image = this.add.image(175, 150,'stone2');
-        this.image = this.add.image(175, 180,'stone2');
-        this.image = this.add.image(175, 210,'stone2');
-        this.image = this.add.image(175, 240,'stone2');
+        stoneD = this.add.image(175, 115,'stone2');
+        stoneD = this.add.image(175, 150,'stone2');
+        stoneD = this.add.image(175, 180,'stone2');
+        stoneD = this.add.image(175, 210,'stone2');
+        stoneD = this.add.image(175, 240,'stone2');
         this.image = this.add.image(200, 255,'stone3');
         this.image = this.add.image(230, 255,'stone3');
         this.image = this.add.image(260, 255,'stone3');
@@ -33,11 +34,11 @@ class ex1 extends Phaser.Scene {
         this.image = this.add.image(380, 255,'stone3');
         this.image = this.add.image(410, 255,'stone3');
         this.image = this.add.image(440, 255,'stone3');
-        this.image = this.add.image(460, 275,'stone2');
-        this.image = this.add.image(460, 305,'stone2');
-        this.image = this.add.image(460, 335,'stone2');
-        this.image = this.add.image(460, 365,'stone2');
-        this.image = this.add.image(460, 395,'stone2');
+        stoneD = this.add.image(460, 275,'stone2');
+        stoneD = this.add.image(460, 305,'stone2');
+        stoneD = this.add.image(460, 335,'stone2');
+        stoneD = this.add.image(460, 365,'stone2');
+        stoneD = this.add.image(460, 395,'stone2');
         this.image = this.add.image(475, 415,'stone3');
         this.image = this.add.image(505, 415,'stone3');
         this.image = this.add.image(535, 415,'stone3');
@@ -58,16 +59,22 @@ class ex1 extends Phaser.Scene {
         bricks1  = this.add.image(920, 600, 'bricks1');
         bricks1 = this.add.image(920, 350, 'bricks1');
         bricks1 = this.add.image(920, 120, 'bricks1');
-        boomerang = this.physics.add.image(possum, possum, 'boomerang') //.setVelocity(300, 200).setBounce(.65);
-        cat1 = this.physics.add.image(625, 100,'cat1');
+        boomerang = this.physics.add.image(possum, possum, 'boomerang').setBounce(.65); //http://yolcati.deviantart.com/
+        hippo = this.physics.add.image(625, 100,'hippo');
         possum = this.physics.add.image(100, 500,'possum');
+        // ratking = this.physics.add.image(625, 500, 'ratking');
 
         possum.setCollideWorldBounds(true);
-        cat1.setCollideWorldBounds(true);
+        hippo.setCollideWorldBounds(true);
         boomerang.setCollideWorldBounds(true);
-
+        
         this.physics.add.existing(bricks);
         this.physics.add.existing(bricks1);
+        this.physics.add.existing(stoneD);
+
+        stoneD.body.allowGravity = false;
+        // stoneD.body.immovable = true;
+
         
         // bricks.body.allowGravity = false;
         // bricks.body.immovable = true;
@@ -76,9 +83,10 @@ class ex1 extends Phaser.Scene {
         // bricks1.body.immovable = true;
 
         possum.body.allowGravity = false;
-       
-        cat1.body.allowGravity = false;
-        cat1.body.immovable = true;
+        // possum.body.immovable = true;
+
+        hippo.body.allowGravity = false;
+        hippo.body.immovable = true;
 
         var BetweenPoints = Phaser.Math.Angle.BetweenPoints;
         var SetToAngle = Phaser.Geom.Line.SetToAngle;
@@ -93,14 +101,13 @@ class ex1 extends Phaser.Scene {
         this.physics.add.collider(possum, bricks1);
 
     //     this.physics.add.collider(this.boomerang, this.bricks, this.hitBrick, null, this);
-        // this.physics.add.collider(this.boomerang, this.cat1, null, this);
-
-        // hitCat1: function (boomerang, cat1)
-        // {
-        // cat1.disableBody(true, true);
-        // }
         
-
+        this.physics.add.collider(boomerang, hippo, hitHippo, null, this);
+          function  hitHippo (boomerang, hippo)
+        {   
+        hippo.disableBody(true, true);
+        }
+        
 
         this.key_W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.key_S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -132,6 +139,12 @@ class ex1 extends Phaser.Scene {
            }
 
        }, this);
+
+       this.input.keyboard.on('keyup', function (e) {
+        if(hitHippo() = true) {
+            this.scene.start("ex2");
+        }
+       }, this);
        
                
     }
@@ -146,18 +159,17 @@ class ex1 extends Phaser.Scene {
         if(this.key_W.isDown)
         possum.y-=5;
         if(this.key_J.isDown)
-        cat1.x-=5;
+        hippo.x-=5;
         if(this.key_L.isDown)
-        cat1.x+=5;  
+        hippo.x+=5;  
         if(this.key_K.isDown)
-        cat1.y+=5;
+        hippo.y+=5;
         if(this.key_I.isDown)
-        cat1.y-=5;
+        hippo.y-=5;
         //possum.setRotation(Phaser.Math.Angle.Between(mouseX, mouseY, possum.x, possum.y) - Math.PI / 2);
     }  
     
 }
-
 
 // hitPaddle: function (ball, paddle)
 //     {
